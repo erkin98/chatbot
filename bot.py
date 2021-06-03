@@ -36,7 +36,3 @@ def bot():
     if incoming_msg < 15000:
         quote = "Sizin məbləğ üçün az sayda universitet var."
 
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0',port=port,debug=True)
