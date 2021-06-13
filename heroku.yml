@@ -2,5 +2,5 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: gunicorn -b 0.0.0.0:$PORT run:app --log-file=-
+  web: gunicorn -b 0.0.0.0:$PORT wsgi:app --log-file=-
 

@@ -1,3 +1,3 @@
-from flask import current_app
+from run import app
 if __name__ == "__main__":
-    current_app.run()
+    app.run()
