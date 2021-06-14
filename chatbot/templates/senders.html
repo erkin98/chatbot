@@ -1,0 +1,11 @@
+{% block content %}
+
+<head><center>{{sender}}</center></head>
+{% for message in msgs %}
+<div class="sender">{{message[0]}}</div>
+<div class="sender">{{message[1]}}</div>
+
+
+{% endfor %}
+
+{% endblock content %}

@@ -1,12 +1,9 @@
 {% block content %}
 {% for sender in senders %}
 
-<head>{{sender}}</head>
+<head><center><a href="/{{sender}}"> {{sender}} </a></center></head>
 {% endfor %}
-{% for message in msgs %}
-<div class="sender">{{message}}</div>
 
-{% endfor %}
 </div> 
 </div>
 
