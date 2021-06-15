@@ -1,7 +1,5 @@
 from flask import Blueprint,render_template,request,redirect,url_for
 from twilio.rest import Client
-import pandas as pd
-
 customers = Blueprint('customers',__name__)
 account_sid = 'AC13ca9197f22f37ed1d02797d60da75d7'
 auth_token = 'ea3708375a819e21b1b02ad4d571a219'
@@ -14,7 +12,7 @@ def get_sender():
     for record in messages:
         message = client.messages(record.sid).fetch()
         senders.append(message.from_)
-    senders = pd.unique(senders)
+    senders = set(senders)
     return senders
 
 def get_msg(sender):
