@@ -1,5 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify,render_template
 from twilio.rest import Client
+from flask import send_from_directory
+import os
 
 customers = Blueprint('customers',__name__)
 account_sid = 'AC13ca9197f22f37ed1d02797d60da75d7'
@@ -36,7 +38,13 @@ def get_msg(sender):
 #         return redirect(url_for('success', sender=sender))
     
 #     return render_template('index.html',senders = senders)
-    
+@customers.route('/', defaults={'path': ''})
+@customers.route('/<path:path>')
+def serve(path):
+     
+         return render_template('index.html')  
+
+
 @customers.route('/customers',methods = ['GET','POST'])
 def home():
     senders = get_sender()

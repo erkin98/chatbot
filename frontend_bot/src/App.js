@@ -13,7 +13,7 @@ function App() {
   const fetchData = async() => {
     try{
       const res = await axios.get('/customers');
-      console.log(res.data);
+      // console.log(res.data);
       dispatch({ type: "GET_CUSTOMERS", customers: res.data.data });
       return res;
     }catch(err){ console.log(err) }

@@ -10,7 +10,7 @@ migrate = Migrate(db)
 
 
 def create_app(config_class = Config):
-    app = Flask(__name__,static_folder='templates/static')
+    app = Flask(__name__,static_folder="../frontend_bot/build/static",template_folder="../frontend_bot/build")
     app.config.from_object(Config)
 
     db.init_app(app)
