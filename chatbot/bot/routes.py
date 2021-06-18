@@ -70,6 +70,7 @@ def bot():
 
                 msg.body(quote1)
                 responded = True
+            else:
 
                 if 'ali məktəblər' in incoming_msg:
                     msg.media('https://i.imgur.com/PfeCzCm.jpeg')
@@ -78,7 +79,7 @@ def bot():
                     msg.media('https://i.imgur.com/j0XE3ro.jpeg')
 
 
-            elif  incoming_msg in docs:
+            if  incoming_msg in docs:
 
                 quote1 = 'Tələb olunan sənədlər:3 tövsiyyə məktubu; Akademik esse; Motivasiya məktubu; CV/Resume; Transkriptlər.'
 
