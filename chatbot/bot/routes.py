@@ -78,59 +78,61 @@ def bot():
                 elif 'orta məktəblər' in incoming_msg:
                     msg.media('https://i.imgur.com/j0XE3ro.jpeg')
 
-
-            if  incoming_msg in docs:
-
-                quote1 = 'Tələb olunan sənədlər:3 tövsiyyə məktubu; Akademik esse; Motivasiya məktubu; CV/Resume; Transkriptlər.'
-
-                msg.body(quote1)
-                responded = True
-
-            elif  incoming_msg in lang:
-
-                quote1 = 'Əsasən IELTS və TOEFL dərəcələri tələb olunur.'
-
-                msg.body(quote1)
-                responded = True
-
-            elif  incoming_msg in info:
-
-                quote1 = '''Daha ətraflı məlumatları konsultanlarımızdan əldə edə bilərsiniz.Əgər sizə uyğundursa nömrənizi, ad və soyadınızı qeyd edin, müvafiq əməkdaşımız zəng edib konsultasiya üçün vaxt təyin etsin.'''
-
-                msg.body(quote1)
-                responded = True
+                else:
 
 
-            elif  incoming_msg in adres:
+                    if  incoming_msg in docs:
 
-                quote1 = '''Ofisimiz Bakı şəhəri, 8 Noyabr(Nobel) pr.15, Azure Biznes Mərkəzi 20-ci mərtəbə, ofis - 135 ünvanında yerləşir.'''
+                        quote1 = 'Tələb olunan sənədlər:3 tövsiyyə məktubu; Akademik esse; Motivasiya məktubu; CV/Resume; Transkriptlər.'
 
-                msg.body(quote1)
-                responded = True
+                        msg.body(quote1)
+                        responded = True
 
-            elif  incoming_msg in con:
+                    elif  incoming_msg in lang:
 
-                quote1 = '''+994505122828
-+994502959776
-+994124886678'''
+                        quote1 = 'Əsasən IELTS və TOEFL dərəcələri tələb olunur.'
 
-                msg.body(quote1)
-                responded = True
+                        msg.body(quote1)
+                        responded = True
 
-            elif  incoming_msg in res:
+                    elif  incoming_msg in info:
 
-                quote1 = '''Konsultasiya üçün aşağıda qeyd olunan linkə keçid edin 
-                            --> https://azeristudent.az/reserve/ və ya +994505122828,
-                            +994502959776, 0124886678 nömrələrinə zəng edin.'''
+                        quote1 = '''Daha ətraflı məlumatları konsultanlarımızdan əldə edə bilərsiniz.Əgər sizə uyğundursa nömrənizi, ad və soyadınızı qeyd edin, müvafiq əməkdaşımız zəng edib konsultasiya üçün vaxt təyin etsin.'''
 
-                msg.body(quote1)
-                responded = True
+                        msg.body(quote1)
+                        responded = True
 
-            else:
-                quote1 = 'Davam edə bilmək üçün, zəhmət olmasa, yuxarıdakı düymələrdən birini seçin.'
 
-                msg.body(quote1)
-                responded = True
+                    elif  incoming_msg in adres:
+
+                        quote1 = '''Ofisimiz Bakı şəhəri, 8 Noyabr(Nobel) pr.15, Azure Biznes Mərkəzi 20-ci mərtəbə, ofis - 135 ünvanında yerləşir.'''
+
+                        msg.body(quote1)
+                        responded = True
+
+                    elif  incoming_msg in con:
+
+                        quote1 = '''+994505122828
+        +994502959776
+        +994124886678'''
+
+                        msg.body(quote1)
+                        responded = True
+
+                    elif  incoming_msg in res:
+
+                        quote1 = '''Konsultasiya üçün aşağıda qeyd olunan linkə keçid edin 
+                                    --> https://azeristudent.az/reserve/ və ya +994505122828,
+                                    +994502959776, 0124886678 nömrələrinə zəng edin.'''
+
+                        msg.body(quote1)
+                        responded = True
+
+                    else:
+                        quote1 = 'Davam edə bilmək üçün, zəhmət olmasa, yuxarıdakı düymələrdən birini seçin.'
+
+                        msg.body(quote1)
+                        responded = True
     # if ('xaricdə təhsil' or "xaricde tehsil") in incoming_msg:
     #     quote = 'Xaricdə təhsil üçün büdcəniz nə qədərdir?'
 
