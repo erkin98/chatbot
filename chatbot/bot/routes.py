@@ -28,7 +28,7 @@ def bot():
                 "İspaniya":"spain",	"İsveç":"isvec","İsveçrə":"sweden",	"isvec":"Isvec","Isvecre":"sweden",
                 "İtaliya":"italy","Kanada":"kanada","Sinqapur":"sinqapur","Türkiyə":"turkiye","Yeni Zelandiya":"yeni-zelandiya","Turkiye":"turkiye"}
 
-    uni_fee = ['tehsil haqqi','təhsil haqqı','tehsil xerci','təhsil xərci','odenis','ödəniş','odenish','qiymet','qiymət']
+    uni_fee = ['tehsil haqqi','təhsil haqqı','tehsil xerci','təhsil xərci','odenis','ödəniş','odenish','qiymet','qiymət','təhsil haqqları','tehsil haqqlari']
     docs = ['sened' , 'sened qebulu' , 'sənəd' , 'sənəd qəbulu']
     lang = ['dil bilikleri' , 'dil bilikləri' , 'IELTS' , 'TOEFL']
     info = ['etrafli melumat' , 'ətraflı məlumat' , 'detalli melumat' , 'detallı məlumat' , 'detal']
