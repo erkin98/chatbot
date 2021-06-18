@@ -26,11 +26,7 @@ def get_msg(sender):
     for msg,reply in zip(messages,responses):
         message = client.messages(msg.sid).fetch()
         response = client.messages(reply.sid).fetch()
-        if len(message) == 0:
-            messages = client.messages.media.list(from_ = sender,to = 'whatsapp:+16156565203',limit = 10)
-            for i in messages:
-                med_message = client.messages(i.sid).fetch()
-                msgs.append((med_message.body,response.body))
+        msgs.append((message.body,response.body))
     return msgs
 
 
