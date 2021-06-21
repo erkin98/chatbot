@@ -20,7 +20,7 @@ def bot():
     msg = resp.message()
     responded = False
     
-    countries = {"ABŞ":"amerika","Almaniya":"almaniya","Avstraliya":"avstraliya","ABS":"amerika",
+    countries = {"ABŞ":"amerika","Almaniya":"almaniya","Avstraliya":"avstraliya","ABS":"amerika","amerika":"amerika",
         	"Avstriya":"avstriya","Belçika":"belcika","Belcika":"belcika",
             	"BƏƏ":"bee","Böyük Britaniya":"boyuk-britaniya","İngiltərə":"boyuk-britaniya",
                 "Çexiya":"cexiya","Çin":"cin","Finlandiya":"finlandiya","chexiya":"cexiya","chin":"cin","cin":"cin","cexiya":"cexiya",
@@ -30,9 +30,9 @@ def bot():
 
     uni_fee = ['tehsil haqqi','təhsil haqqı','tehsil xerci','təhsil xərci','odenis','ödəniş','odenish','qiymet','qiymət','təhsil haqqları','tehsil haqqlari']
     docs = ['sened' , 'sened qebulu' , 'sənəd' , 'sənəd qəbulu']
-    lang = ['dil bilikleri' , 'dil bilikləri' , 'IELTS' , 'TOEFL']
+    lang = ['dil bilikleri' , 'dil bilikləri' , 'IELTS' , 'TOEFL','dil tələbləri','dil telebleri','sertifikat']
     info = ['etrafli melumat' , 'ətraflı məlumat' , 'detalli melumat' , 'detallı məlumat' , 'detal']
-    adres = ['adress' , 'adres' , 'unvan' , 'ünvan' , 'harda' , 'harada']
+    adres = ['adress' , 'adres' , 'unvan' , 'ünvan','ofis']
     con = ['elaqe' , 'əlaqə' , 'telfon' , 'telefon' , 'nömrə' , 'nomre']
     res = ['konsultasiya' , 'görüş' , 'gorus' , 'gorush' , "rezervasiya"]
 
@@ -48,12 +48,17 @@ def bot():
         quote1 = 'Hansı ölkənin təhsil müəssisələri ilə maraqlanırsınız?'
     
         msg.body(quote1)
-      
-    elif incoming_msg in countries:
-                msg.body('https://azeristudent.az/countries/' + countries[incoming_msg])
-                responded = True
+        responded = True
+
 
     else:
+        for c in countries:
+            if c in  incoming_msg :
+                msg.body('https://azeristudent.az/countries/' + countries[c])
+                responded = True
+            
+
+    if not responded:
         if 'dil kursu' in incoming_msg:
             quote1 = 'Aktiv dil kursları ilə bağlı məlumat almaq üçün saytımıza daxil olun'
             quote2 = '--> https://azeristudent.az/language-program/'
@@ -64,75 +69,91 @@ def bot():
             
 
         else:
-            if incoming_msg in uni_fee:
+            for f in uni_fee:
+                if f in incoming_msg:
 
-                quote1 = 'Ödənişlər standart deyil, ətraflı məlumat üçün sizə uyğun düyməni sıxın.Qeyd edək ki,universitetlər 2 hissəli şəkildə ödənişə icazə verir.'
+                    quote1 = 'Ödənişlər standart deyil, ətraflı məlumat üçün sizə uyğun düyməni sıxın.Qeyd edək ki,universitetlər 2 hissəli şəkildə ödənişə icazə verir.'
 
-                msg.body(quote1)
-                responded = True
-            else:
+                    msg.body(quote1)
+                    responded = True
+                    
+            if not responded:
 
                 if 'ali məktəblər' in incoming_msg:
                     msg.media('https://i.imgur.com/PfeCzCm.jpeg')
+                    responded = True
                 
                 elif 'orta məktəblər' in incoming_msg:
                     msg.media('https://i.imgur.com/j0XE3ro.jpeg')
+                    responded = True
 
-                else:
+                if not responded:
+                    for d in docs:
+                        if  d in incoming_msg:
+
+                            quote1 = '''Tələb olunan sənədlər:
+- 3 tövsiyyə məktubu;
+- Akademik esse;
+- Motivasiya məktubu; 
+- CV/Resume; 
+- Transkriptlər.'''
+                            msg.body(quote1)
+                            responded = True
+
+                if not responded:
+                    for l in lang:
+                        if l in incoming_msg:
+
+                            quote1 = '''Tələb olunan dil sertifikatları:
+IELTS və ya TOEFL'''
+                            msg.body(quote1)
+                            responded = True
+
+                if not responded:
+                    for i in info:
+                        if i in incoming_msg:
+
+                            quote1 = '''Daha ətraflı məlumatları konsultanlarımızdan əldə edə bilərsiniz.Əgər sizə uyğundursa nömrənizi, ad və soyadınızı qeyd edin, müvafiq əməkdaşımız zəng edib konsultasiya üçün vaxt təyin etsin.'''
+                            msg.body(quote1)
+                            responded = True
 
 
-                    if  incoming_msg in docs:
+                if  not responded:
+                    for a in adres:
+                        if a in incoming_msg:
 
-                        quote1 = 'Tələb olunan sənədlər:3 tövsiyyə məktubu; Akademik esse; Motivasiya məktubu; CV/Resume; Transkriptlər.'
+                            quote1 = '''Ofisimiz Bakı şəhəri, 8 Noyabr(Nobel) pr.15, Azure Biznes Mərkəzi 20-ci mərtəbə, ofis - 135 ünvanında yerləşir.'''
 
-                        msg.body(quote1)
-                        responded = True
+                            msg.body(quote1)
+                            responded = True
 
-                    elif  incoming_msg in lang:
+                if not responded:
+                    for co in con:
+                        if co in incoming_msg:
 
-                        quote1 = 'Əsasən IELTS və TOEFL dərəcələri tələb olunur.'
+                            quote1 = '''+994505122828
++994502959776
++994124886678'''
 
-                        msg.body(quote1)
-                        responded = True
+                            msg.body(quote1)
+                            responded = True
 
-                    elif  incoming_msg in info:
-
-                        quote1 = '''Daha ətraflı məlumatları konsultanlarımızdan əldə edə bilərsiniz.Əgər sizə uyğundursa nömrənizi, ad və soyadınızı qeyd edin, müvafiq əməkdaşımız zəng edib konsultasiya üçün vaxt təyin etsin.'''
-
-                        msg.body(quote1)
-                        responded = True
+                if  not responded:
+                    for r in res:
+                        if r in incoming_msg:
 
 
-                    elif  incoming_msg in adres:
+                            quote1 = '''Konsultasiya üçün aşağıda qeyd olunan linkə keçid edin 
+--> https://azeristudent.az/reserve/ və ya +994505122828,+994502959776, 0124886678 nömrələrinə zəng edin.'''
 
-                        quote1 = '''Ofisimiz Bakı şəhəri, 8 Noyabr(Nobel) pr.15, Azure Biznes Mərkəzi 20-ci mərtəbə, ofis - 135 ünvanında yerləşir.'''
+                            msg.body(quote1)
+                            responded = True
 
-                        msg.body(quote1)
-                        responded = True
+                if not responded:
+                    quote1 = 'Davam edə bilmək üçün, zəhmət olmasa, yuxarıdakı düymələrdən birini seçin.'
 
-                    elif  incoming_msg in con:
-
-                        quote1 = '''+994505122828
-        +994502959776
-        +994124886678'''
-
-                        msg.body(quote1)
-                        responded = True
-
-                    elif  incoming_msg in res:
-
-                        quote1 = '''Konsultasiya üçün aşağıda qeyd olunan linkə keçid edin 
-                                    --> https://azeristudent.az/reserve/ və ya +994505122828,
-                                    +994502959776, 0124886678 nömrələrinə zəng edin.'''
-
-                        msg.body(quote1)
-                        responded = True
-
-                    else:
-                        quote1 = 'Davam edə bilmək üçün, zəhmət olmasa, yuxarıdakı düymələrdən birini seçin.'
-
-                        msg.body(quote1)
-                        responded = True
+                    msg.body(quote1)
+                    responded = True
     # if ('xaricdə təhsil' or "xaricde tehsil") in incoming_msg:
     #     quote = 'Xaricdə təhsil üçün büdcəniz nə qədərdir?'
 
