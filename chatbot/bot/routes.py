@@ -29,7 +29,7 @@ def bot():
     msg = resp.message()
     responded = False
     
-    countries = {"ABŞ":"amerika","Almaniya":"almaniya","Avstraliya":"avstraliya","ABS":"amerika","amerika":"amerika",
+    countries = {"ABŞ":"amerika","Almaniya":"almaniya","Avstraliya":"avstraliya","ABS":"amerika","amerika":"amerika","usa":"amerika",
         	"Avstriya":"avstriya","Belçika":"belcika","Belcika":"belcika",
             	"BƏƏ":"bee","Böyük Britaniya":"boyuk-britaniya","İngiltərə":"boyuk-britaniya",
                 "Çexiya":"cexiya","Çin":"cin","Finlandiya":"finlandiya","chexiya":"cexiya","chin":"cin","cin":"cin","cexiya":"cexiya",

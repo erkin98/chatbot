@@ -11,8 +11,8 @@ client = Client(account_sid, auth_token)
 # +16156565203
 def get_msg(sender):
     msgs = []
-    messages = client.messages.list(from_ = sender,to = 'whatsapp:+14155238886',limit = 10)
-    responses = client.messages.list(from_ = 'whatsapp:+14155238886',to = sender,limit = 10)
+    messages = client.messages.list(from_ = sender,to = 'whatsapp:+16156565203',limit = 10)
+    responses = client.messages.list(from_ = 'whatsapp:+16156565203',to = sender,limit = 10)
     for msg,reply in zip(messages,responses):
         message = client.messages(msg.sid).fetch()
         response = client.messages(reply.sid).fetch()
