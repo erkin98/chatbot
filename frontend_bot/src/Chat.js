@@ -1,15 +1,23 @@
-import { IconButton } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import PersonIcon from '@material-ui/icons/Person';
+import { Avatar, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import "./Chat.css";
 import axios from 'axios';
 import { useStateValue } from "./StateProvider";
+
+const useStyles = makeStyles((theme) => ({
+  large: {
+    width: "50px",
+    height: "50px",
+  },
+}));
+
 function Chat() {
   const { roomId } = useParams();
   const [messages, setMessages] = useState([]);
   const [state] = useStateValue();
+  const classes = useStyles();
   const divRef = useRef(null);
   const fetchData = useCallback(async() => {
     try{
@@ -25,12 +33,15 @@ function Chat() {
   }, [roomId,fetchData]);
   
   useEffect(() => {
-    if (divRef) {
-      divRef.current.addEventListener('DOMNodeInserted', event => {
-        const { currentTarget } = event;
-        currentTarget.scroll({ top: currentTarget.scrollHeight, behavior: 'smooth' });
-      });
+    const reference = divRef.current;
+    const nodeInserted = event => {
+      const { currentTarget } = event;
+      currentTarget.scroll({ top: currentTarget.scrollHeight, behavior: 'smooth' });
     }
+    if (divRef) {
+      reference.addEventListener('DOMNodeInserted', nodeInserted);
+    }
+    return ()=> reference.removeEventListener("DOMNodeInserted",nodeInserted);
   }, []);
 
   return (
@@ -38,13 +49,12 @@ function Chat() {
       <div className="chat__header">
         <div className="chat__header__left">
           <div className="chat__header__info">
+              <Avatar
+              src={<PersonIcon/>}
+              className={classes.large}
+            />
             <h3>{state.customers[roomId]}</h3>
           </div>
-        </div>
-        <div className="chat__header__right">
-          <IconButton onClick={fetchData}>
-            <RefreshIcon/>
-          </IconButton>
         </div>
       </div>
       <div className="chat__body" ref={divRef}>

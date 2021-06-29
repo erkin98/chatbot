@@ -10,6 +10,7 @@ import { useStateValue } from './StateProvider';
 
 function App() {
   const [state,dispatch] = useStateValue();
+  
   const fetchData = useCallback(async() => {
     try{
       const res = await axios.get('/customers');
@@ -17,18 +18,16 @@ function App() {
       return res;
     }catch(err){ console.log(err) }
   },[dispatch])
+
   useEffect(() => {
-    let intervalId;
       fetchData();
-      if(state?.customers?.length) intervalId = setInterval(fetchData,30000);
-    return () => clearInterval(intervalId); //cleanup function
-  }, [fetchData, state?.customers?.length]);
+  }, [fetchData]);
 
   return (
     <div className="app">
       <div className="app__body">
           <Router>
-            <Sidebar />
+            <Sidebar refreshHandler={fetchData}/>
             <Switch>
               <Route path="/rooms/:roomId">
                 <Chat />
