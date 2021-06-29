@@ -1,11 +1,11 @@
-# from chatbot import db
+from chatbot import db
 
-# class Customer(db.Model):
-#     id = db.Column(db.Integer,primary_key = True)
-#     sender = db.Column(db.String)
-#     messages = db.relationship('Message',backref = 'sender',lazy = True)
-#     def __repr__(self):
-#         return self.sender
+class Customer(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    sender = db.Column(db.String)
+    # messages = db.relationship('Message',backref = 'sender',lazy = True)
+    def __repr__(self):
+        return '{}'.format(self.sender)
 
 # class Message(db.Model):
 #     id = db.Column(db.Integer,primary_key = True)
