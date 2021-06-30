@@ -1,35 +1,33 @@
 import './App.css';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import axios from 'axios';
 import  {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
 import Chat from "./Chat";
-import Login from "./Login";
+// import Login from "./Login";
 import Sidebar from "./Sidebar";
 import { useStateValue } from './StateProvider';
 
 
 function App() {
-  const [state, dispatch] = useStateValue();
-  const fetchData = async() => {
+  const [state,dispatch] = useStateValue();
+  
+  const fetchData = useCallback(async() => {
     try{
       const res = await axios.get('/customers');
-      // console.log(res.data);
       dispatch({ type: "GET_CUSTOMERS", customers: res.data.data });
       return res;
     }catch(err){ console.log(err) }
-  };
+  },[dispatch])
+
   useEffect(() => {
-    let intervalId;
       fetchData();
-      intervalId = setInterval(fetchData,30000);
-    return () => clearInterval(intervalId); //cleanup function
-  }, []);
+  }, [fetchData]);
 
   return (
     <div className="app">
       <div className="app__body">
           <Router>
-            <Sidebar />
+            <Sidebar refreshHandler={fetchData}/>
             <Switch>
               <Route path="/rooms/:roomId">
                 <Chat />

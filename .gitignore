@@ -2,3 +2,4 @@ __pycache__
 .vscode
 senderid.py
 sms.py
+test.py

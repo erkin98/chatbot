@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./SidebarChat.css";
 import { Avatar, makeStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import PersonIcon from '@material-ui/icons/Person';
 const useStyles = makeStyles((theme) => ({
   large: {
     width: "50px",
@@ -11,45 +12,17 @@ const useStyles = makeStyles((theme) => ({
 
 function SidebarChat({ id, addNewChat, name }) {
   const classes = useStyles();
-  const [seed, setSeed] = useState("");
-  // const [messages, setMessages] = useState([]);
-
-  // useEffect(() => {
-  //   if (id) {
-  //     db.collection("rooms")
-  //       .doc(id)
-  //       .collection("messages")
-  //       .orderBy("timestamp", "desc")
-  //       .onSnapshot((snapshot) => {
-  //         setMessages(snapshot.docs.map((doc) => doc.data()));
-  //       });
-  //   }
-  // }, [id]);
-
-  useEffect(() => {
-    setSeed(Math.floor(Math.random() * 5000));
-  }, []);
-
-  // const createChat = () => {
-  //   const roomName = prompt("Please enter a name for the chat room");
-  //   if (roomName) {
-  //     //do clever firebase db
-  //     db.collection("rooms").add({
-  //       name: roomName,
-  //     });
-  //   }
-  // };
 
   return !addNewChat ? (
     <Link to={`/rooms/${id}`}>
       <div className="sidebarChat">
         <Avatar
-          src={`https://avatars.dicebear.com/api/human/${seed}.svg`}
+          src={<PersonIcon/>}
           className={classes.large}
         />
+        
         <div className="sidebarChat__info">
           <h3>{name}</h3>
-          {/* <small>{messages[0]?.message}</small> */}
         </div>
       </div>
     </Link>

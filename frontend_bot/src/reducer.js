@@ -1,5 +1,6 @@
 export const initialState = {
   customers: [],
+  size: 10
 };
 
 export const reducer = (state, action) => {
@@ -8,6 +9,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         customers: action.customers,
+      };
+    case "UPDATE_SIZE":
+      return {
+        ...state,
+        size: action.size,
       };
     default:
       return state;
