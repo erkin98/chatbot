@@ -1,8 +1,8 @@
 import React from "react";
 import "./Sidebar.css";
-import { IconButton } from "@material-ui/core";
 import SidebarChat from "./SidebarChat";
 import { useStateValue } from "./StateProvider";
+import { IconButton } from "@material-ui/core";
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 function Sidebar({refreshHandler}) {

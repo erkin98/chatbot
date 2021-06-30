@@ -1,5 +1,5 @@
 from chatbot.models import Customer
-from flask import Blueprint, jsonify,render_template
+from flask import Blueprint, jsonify,render_template,request
 from twilio.rest import Client
 from chatbot import db 
 
@@ -11,8 +11,9 @@ client = Client(account_sid, auth_token)
 # +16156565203
 def get_msg(sender):
     msgs = []
-    messages = client.messages.list(from_ = sender,to = 'whatsapp:+16156565203',limit = 10)
-    responses = client.messages.list(from_ = 'whatsapp:+16156565203',to = sender,limit = 10)
+    data = request.get_json()['size']
+    messages = client.messages.list(from_ = sender,to = 'whatsapp:+16156565203',limit = data)
+    responses = client.messages.list(from_ = 'whatsapp:+16156565203',to = sender,limit = data)
     for msg,reply in zip(messages,responses):
         message = client.messages(msg.sid).fetch()
         response = client.messages(reply.sid).fetch()
@@ -36,6 +37,6 @@ def home():
 
     
 
-@customers.route('/<sender>',methods = ['GET','POST'])
+@customers.route('/customers/<sender>',methods = ['GET','POST'])
 def go_sender(sender):
     return jsonify(data=get_msg(sender))

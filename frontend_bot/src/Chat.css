@@ -45,13 +45,13 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     overflow-y: auto;
+    position:relative
 }
 .chat__body::-webkit-scrollbar{
     width: 6px;
 }
 .chat__body::-webkit-scrollbar-thumb{
-    background-color: lightgray;
-
+    background-color: #dcf8c6;
 }
 
 .chat__body .chat__message{
@@ -64,6 +64,45 @@
     position: relative;
 
 }
+.chat__body .chat__size{
+    display: block;
+    position:absolute;
+    top:-50px;
+    animation: scroll .3s forwards;
+    left:50%;
+    transform:translateX(-50%);
+}
+@keyframes scroll {
+    0%{
+        top: -50px;
+    }
+    100%{
+        top: 10px;
+    }
+}
+.chat__body .chat__size__inner{
+    width: 50px;
+    padding:10px;
+    height:40px;
+    text-align:center;
+    cursor: pointer;
+}
+.chat__body .chat__size__icon{
+    background-color: #fff;
+    border-radius: 20px;
+    padding:10px;
+}
+.chat__body .chat__size__icon:hover{
+    background-color: lightgray;
+}
+
+.chat__body .messages{
+    transition: all .4s ease;
+}
+.chat__body .messages.new-msg{
+    background-color: rgba(220, 248, 198, 0.5);
+}
+
 .chat__body .chat__reciever{
     margin-left: auto;
     background-color: #dcf8c6;
@@ -121,4 +160,10 @@
 }
 input::placeholder{
     opacity: .8;
+}
+
+
+.MuiButtonBase-root.MuiIconButton-root{
+    position: relative;
+    top: -3px;
 }
