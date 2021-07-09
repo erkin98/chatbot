@@ -91,6 +91,9 @@
     background-color: #fff;
     border-radius: 20px;
     padding:10px;
+    position: relative;
+    z-index: 100;   
+
 }
 .chat__body .chat__size__icon:hover{
     background-color: lightgray;
