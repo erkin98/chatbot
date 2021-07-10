@@ -1,0 +1,7 @@
+.vscode/
+~./
+Procfile
+frontend_bot/node_modules/
+test.py
+chatbot/bot.db
+__pycache__/

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: chatbot
+    build: .
+    command: gunicorn --bind 0.0.0.0:5000 wsgi:app
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 5000:5000
+    env_file:
+      - ./.env.dev
+    depends_on:
+    - db
+  db:
+    container_name: postgres-db
+    image: postgres:13
+    volumes:
+    - postgres_data:/var/lib/postgresql/data/
+    environment:
+    - POSTGRES_USER=azebot
+    - POSTGRES_PASSWORD=azebot_pw
+    - POSTGRES_DB=azebot_db
+    - LC_ALL=C.UTF-8
+  
+volumes:
+    postgres_data:
