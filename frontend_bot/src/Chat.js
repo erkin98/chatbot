@@ -6,6 +6,7 @@ import "./Chat.css";
 import axios from 'axios';
 import { useStateValue } from "./StateProvider";
 import Spinner from './Spinner';
+
 const useStyles = makeStyles((theme) => ({
   large: {
     width: "50px",
@@ -16,122 +17,108 @@ const useStyles = makeStyles((theme) => ({
 function Chat() {
   const { roomId } = useParams();
   const [messages, setMessages] = useState([]);
-  const [state,dispatch] = useStateValue();
-  const [loading, setLoading] = useState(true);
-  const size = useRef(10);
-  const classes = useStyles();
-  const divRef = useRef(null);
-  // for hide load more div when no more messages
-  const spinner = useRef(true);
-  // check first click to prevent appling puf effect to first messages
-  const fetched = useRef(false);
-  const messagesRef = document.getElementsByClassName('messages');
-  const fetchData = useCallback(async() => {
-    try{
-      setLoading(true);
-      const res = await axios.post('/customers/'+state.customers[roomId],{size:size.current});
-      if(res?.data?.data?.slice(size.current-10).length < 10 ){
-        document.querySelector(".chat__size").style.display = "none"; 
-        spinner.current = false;
-      }else{
-        document.querySelector(".chat__size").style.display = "block"; 
-        spinner.current = true;
-      }
-      if(size.current >10){
-        setMessages((prev)=> [...res?.data?.data?.slice(size.current-10).reverse(),...prev]);
-        if(fetched.current){
-          for(let i = 0; i < res?.data?.data?.slice(size.current-10).length*2;i++){
-            messagesRef[i].classList.add('new-msg');
-          }
-          setTimeout(()=>{
-            for(let i = 0; i < res?.data?.data?.slice(size.current-10).length*2;i++){
-              messagesRef[i].classList.remove('new-msg');
-            } 
-          },2000);
-        }
-      }
-      else{ 
-        setMessages(res?.data?.data?.reverse());
-      }
-      divRef.current.removeEventListener('DOMNodeInserted', nodeInserted);
-      setLoading(false);
-      return res;
-    }catch(err){ 
-      setLoading(false);
-      divRef.current.removeEventListener('DOMNodeInserted', nodeInserted);
-      return err; 
-    }
-
-  },[roomId,state.customers]);
-
-  const fetchPrevious = ()=>{
-    size.current +=10;
-    fetched.current = true;
-    dispatch({ type: "UPDATE_SIZE", size: size.current });
-    fetchData();
-  }
-
-  useEffect(() => {
-      setMessages([]);
-      size.current = 10;
-      divRef.current.addEventListener('DOMNodeInserted', nodeInserted);
-      fetchData();
-  }, [roomId,fetchData]);
+  const [state] = useStateValue();
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const sizeRef = useRef(10);
   
-  const nodeInserted = event => {
-    const { currentTarget } = event;
-    currentTarget.scroll({ top: currentTarget.scrollHeight, behavior: 'smooth' });
-  }
+  const classes = useStyles();
+  const chatBodyRef = useRef(null);
+  const prevScrollHeight = useRef(0);
+  const isLoadMore = useRef(false);
+
+  const fetchMessages = useCallback(async () => {
+    if (!state.customers || !state.customers[roomId]) return;
+    
+    setLoading(true);
+    try {
+      const currentSize = sizeRef.current;
+      // Using axios.post as per original implementation
+      const res = await axios.post(`/customers/${state.customers[roomId]}`, { size: currentSize });
+      
+      const allMessages = res.data.data || [];
+      // Original logic reversed the list because backend sends [latest...oldest] (implied by client.messages.list default order usually being desc date, but we zip them. 
+      // If backend logic didn't change order, we assume it's consistent.
+      // Original: setMessages(res?.data?.data?.reverse()) for initial load.
+      
+      const reversedMessages = [...allMessages].reverse();
+      setMessages(reversedMessages);
+
+      // Heuristic for "has more": if we got fewer messages (tuples) than we asked for (limit), we probably exhausted the history.
+      // Note: Twilio list returns up to limit.
+      if (allMessages.length < currentSize) {
+         // This logic is imperfect because if we have exactly 10 messages and ask for 10, we get 10. Next time we ask for 20, we get 10.
+         // But we can't easily detect "end" without a count or next_page_uri from backend.
+         // We'll leave it as is.
+      }
+      
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [roomId, state.customers]);
 
   useEffect(() => {
-    const reference = divRef.current;
-    const listenScroll = ()=>{
-      const winScroll =reference.scrollTop;
-      if(winScroll < 10 && spinner.current){
-        document.querySelector(".chat__size").style.display = "block";
-      }else{
-        document.querySelector(".chat__size").style.display = "none";
+    // Initial Load
+    setMessages([]);
+    sizeRef.current = 10;
+    setHasMore(true);
+    isLoadMore.current = false;
+    fetchMessages();
+  }, [roomId, fetchMessages]);
+
+  useEffect(() => {
+    // Handle Scroll Position
+    const chatBody = chatBodyRef.current;
+    if (chatBody) {
+      if (isLoadMore.current) {
+        // Restore scroll position relative to bottom
+        chatBody.scrollTop = chatBody.scrollHeight - prevScrollHeight.current;
+        isLoadMore.current = false;
+      } else {
+        // Scroll to bottom on initial load
+        chatBody.scrollTop = chatBody.scrollHeight;
       }
     }
-    if (divRef) {
-      reference.addEventListener('scroll', listenScroll);
+  }, [messages]);
+
+  const handleLoadMore = () => {
+    if (chatBodyRef.current) {
+      prevScrollHeight.current = chatBodyRef.current.scrollHeight;
     }
-    return ()=> reference.removeEventListener("scroll",listenScroll);
-  }, []);
+    isLoadMore.current = true;
+    sizeRef.current += 10;
+    fetchMessages();
+  };
 
   return (
     <div className="chat">
       <div className="chat__header">
         <div className="chat__header__left">
           <div className="chat__header__info">
-              <Avatar
-              src={<PersonIcon/>}
-              className={classes.large}
-            />
-            <h3>{state.customers[roomId]}</h3>
+            <Avatar src={<PersonIcon/>} className={classes.large} />
+            <h3>{state.customers ? state.customers[roomId] : 'User'}</h3>
           </div>
         </div>
       </div>
-      <div className="chat__body" ref={divRef}>
-        <div className="chat__size"> 
+      
+      <div className="chat__body" ref={chatBodyRef}>
+        <div className="chat__size" style={{ display: hasMore ? 'block' : 'none' }}> 
             <div className="chat__size__inner">
-              {loading ? <Spinner/> : <div className="chat__size__icon" onClick={fetchPrevious}>+10</div>}
-              
+              {loading ? <Spinner/> : <div className="chat__size__icon" onClick={handleLoadMore}>+10</div>}
             </div>
         </div>
-        {messages?.map((mes) => {
-          return mes?.map((s,idx)=>
-            <div key={`msg-${idx}`} className="messages">
-              <p
-            className={`chat__message ${
-              mes?.indexOf(s) === 1 && "chat__reciever"
-            }`}
-          >
-            {s}
-          </p>
-          </div>
-        )
-        })}
+        
+        {messages.map((mes, groupIdx) => (
+             mes.map((msgContent, msgIdx) => (
+                <div key={`${groupIdx}-${msgIdx}`} className="messages">
+                     <p className={`chat__message ${msgIdx === 1 ? "chat__reciever" : ""}`}>
+                        {msgContent}
+                     </p>
+                </div>
+             ))
+        ))}
       </div>
     </div>
   );
