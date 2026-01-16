@@ -1,175 +1,28 @@
-# from chatbot.models import Customer,Message, Response
-from flask import request,Blueprint
+from flask import request, Blueprint
 from twilio.twiml.messaging_response import MessagingResponse
-from chatbot import db
-from chatbot.models import Customer
+from chatbot.bot.services import BotService
 import datetime
 
-
-bots = Blueprint('bots',__name__)
+bots = Blueprint('bots', __name__)
+bot_service = BotService()
 
 @bots.route('/bot', methods=['POST'])
 def bot():
-    incoming_msg = request.values.get('Body').lower()
-    sender_num = request.values.get('From').lower()
-    date = request.values.get('MessageSid')
-    print(date)
-    if( bool(Customer.query.filter_by(sender=sender_num).first())):
-        pass
-    else:
-        # db.drop_all()
-        # db.create_all()
-        send_id = Customer(sender = sender_num)
-        db.session.add(send_id)
-        db.session.commit()
-        # i_msg = Message(message = incoming_msg)
-        # db.session.add(i_msg)
-        # db.session.commit()
+    incoming_msg = request.values.get('Body', '').lower()
+    sender_num = request.values.get('From', '').lower()
+    # Log the message SID if needed, or date
+    # date = request.values.get('MessageSid') 
+    
+    response_body, media_url = bot_service.process_message(incoming_msg, sender_num)
+    
     resp = MessagingResponse()
     msg = resp.message()
-    responded = False
     
-    countries = {"ABŞ":"amerika","Almaniya":"almaniya","Avstraliya":"avstraliya","ABS":"amerika","amerika":"amerika","usa":"amerika",
-        	"Avstriya":"avstriya","Belçika":"belcika","Belcika":"belcika",
-            	"BƏƏ":"bee","Böyük Britaniya":"boyuk-britaniya","İngiltərə":"boyuk-britaniya",
-                "Çexiya":"cexiya","Çin":"cin","Finlandiya":"finlandiya","chexiya":"cexiya","chin":"cin","cin":"cin","cexiya":"cexiya",
-                "Fransa":"fransa","Hollandiya":"hollandiya",'niderland':"hollandiya","İrlandiya":"ireland",
-                "İspaniya":"spain",	"İsveç":"isvec","İsveçrə":"sweden",	"isvec":"Isvec","Isvecre":"sweden",
-                "İtaliya":"italy","Kanada":"kanada","Sinqapur":"sinqapur","Türkiyə":"turkiye","Yeni Zelandiya":"yeni-zelandiya","Turkiye":"turkiye"}
-
-    uni_fee = ['tehsil haqqi','təhsil haqqı','tehsil xerci','təhsil xərci','odenis','ödəniş','odenish','qiymet','qiymət','təhsil haqqları','tehsil haqqlari']
-    docs = ['sened' , 'sened qebulu' , 'sənəd' , 'sənəd qəbulu']
-    lang = ['dil bilikleri' , 'dil bilikləri' , 'IELTS' , 'TOEFL','dil tələbləri','dil telebleri','sertifikat']
-    info = ['etrafli melumat' , 'ətraflı məlumat' , 'detalli melumat' , 'detallı məlumat' , 'detal']
-    adres = ['adress' , 'adres' , 'unvan' , 'ünvan','ofis']
-    con = ['elaqe' , 'əlaqə' , 'telfon' , 'telefon' , 'nömrə' , 'nomre']
-    res = ['konsultasiya' , 'görüş' , 'gorus' , 'gorush' , "rezervasiya"]
-
-    countries = dict((k.lower(), v.lower()) for k,v in countries.items())
-
-    if 'salam' in incoming_msg :
-        quote = '\'Salam.Siz Azeri Studentin chatbotu ilə əlaqədəsiniz.Sizə necə kömək edə bilərik?\''
-
-        msg.body(quote)
-        responded = True
-
-    elif 'xaricdə təhsil' in incoming_msg :
-        quote1 = 'Hansı ölkənin təhsil müəssisələri ilə maraqlanırsınız?'
+    if response_body:
+        msg.body(response_body)
     
-        msg.body(quote1)
-        responded = True
-
-
-    else:
-        for c in countries:
-            if c in  incoming_msg :
-                msg.body('https://azeristudent.az/countries/' + countries[c])
-                responded = True
-            
-
-    if not responded:
-        if 'dil kursu' in incoming_msg:
-            quote1 = 'Aktiv dil kursları ilə bağlı məlumat almaq üçün saytımıza daxil olun'
-            quote2 = '--> https://azeristudent.az/language-program/'
-
-            msg.body(quote1)
-            msg.body(quote2)
-            responded = True
-            
-
-        else:
-            for f in uni_fee:
-                if f in incoming_msg:
-
-                    quote1 = 'Ödənişlər standart deyil, ətraflı məlumat üçün sizə uyğun düyməni sıxın.Qeyd edək ki,universitetlər 2 hissəli şəkildə ödənişə icazə verir.'
-
-                    msg.body(quote1)
-                    responded = True
-                    
-            if not responded:
-
-                if 'ali məktəblər' in incoming_msg:
-                    msg.media('https://i.imgur.com/PfeCzCm.jpeg')
-                    responded = True
-                
-                elif 'orta məktəblər' in incoming_msg:
-                    msg.media('https://i.imgur.com/j0XE3ro.jpeg')
-                    responded = True
-
-                if not responded:
-                    for d in docs:
-                        if  d in incoming_msg:
-
-                            quote1 = '''Tələb olunan sənədlər:
-- 3 tövsiyyə məktubu;
-- Akademik esse;
-- Motivasiya məktubu; 
-- CV/Resume; 
-- Transkriptlər.'''
-                            msg.body(quote1)
-                            responded = True
-
-                if not responded:
-                    for l in lang:
-                        if l in incoming_msg:
-
-                            quote1 = '''Tələb olunan dil sertifikatları:
-IELTS və ya TOEFL'''
-                            msg.body(quote1)
-                            responded = True
-
-                if not responded:
-                    for i in info:
-                        if i in incoming_msg:
-
-                            quote1 = '''Daha ətraflı məlumatları konsultanlarımızdan əldə edə bilərsiniz.Əgər sizə uyğundursa nömrənizi, ad və soyadınızı qeyd edin, müvafiq əməkdaşımız zəng edib konsultasiya üçün vaxt təyin etsin.'''
-                            msg.body(quote1)
-                            responded = True
-
-
-                if  not responded:
-                    for a in adres:
-                        if a in incoming_msg:
-
-                            quote1 = '''Ofisimiz Bakı şəhəri, 8 Noyabr(Nobel) pr.15, Azure Biznes Mərkəzi 20-ci mərtəbə, ofis - 135 ünvanında yerləşir.'''
-
-                            msg.body(quote1)
-                            responded = True
-
-                if not responded:
-                    for co in con:
-                        if co in incoming_msg:
-
-                            quote1 = '''+994505122828
-+994502959776
-+994124886678'''
-
-                            msg.body(quote1)
-                            responded = True
-
-                if  not responded:
-                    for r in res:
-                        if r in incoming_msg:
-
-
-                            quote1 = '''Konsultasiya üçün aşağıda qeyd olunan linkə keçid edin 
---> https://azeristudent.az/reserve/ və ya +994505122828,+994502959776, 0124886678 nömrələrinə zəng edin.'''
-
-                            msg.body(quote1)
-                            responded = True
-
-                if not responded:
-                    quote1 = 'Davam edə bilmək üçün, zəhmət olmasa, aşağıdakı düymələrdən birini seçin.'
-
-                    msg.body(quote1)
-                    responded = True
-
-    # our_msg = Response(response = quote)
-    # db.session.add(our_msg)
-    # o_id = Response(our_id = 'Azeri Student')
-    # db.session.add(o_id)
-    # db.session.commit()
-    print(datetime.datetime.now())
+    if media_url:
+        msg.media(media_url)
+        
+    print(f"Processed message at {datetime.datetime.now()}")
     return str(resp)
-
-
